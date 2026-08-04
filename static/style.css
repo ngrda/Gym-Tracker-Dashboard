@@ -1,0 +1,367 @@
+:root {
+  --bg-color: #f3f6fc;
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --accent-blue: #3b82f6;
+  --accent-light: #eff6ff;
+  --green-text: #16a34a;
+  --red-text: #dc2626;
+  --border-color: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  padding: 20px;
+}
+
+/* Contenedor principal sin marco, bordes ni sombras */
+.dashboard-window {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.dashboard-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.stat-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  background: var(--accent-light);
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.stat-info h4 {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stat-info .value {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.stat-info .subtext {
+  font-size: 0.7rem;
+  color: var(--accent-blue);
+  margin-top: 2px;
+}
+
+.grid-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+th, td {
+  padding: 8px 6px;
+  text-align: left;
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+
+td {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.badge-up {
+  color: var(--green-text);
+  font-weight: 600;
+}
+
+.badge-down {
+  color: var(--red-text);
+  font-weight: 600;
+}
+
+.badge-hold {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.badge-neutral {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.phase-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 24px;
+  background: var(--accent-light);
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+}
+
+.phase-banner .phase-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent-blue);
+}
+
+.phase-banner .phase-item span {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.phase-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.phase-tab {
+  border: 1px solid var(--border-color);
+  background: #fff;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.phase-tab:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.phase-tab.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #fff;
+}
+
+.grid-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 20px;
+}
+
+.calendar-month-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.calendar-weekday-label {
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 2px;
+}
+
+.calendar-day,
+.calendar-day-empty {
+  height: 32px;
+  border-radius: 6px;
+}
+
+.calendar-day-empty {
+  background: transparent;
+}
+
+.calendar-day {
+  background: #eef2f7;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.calendar-day.trained {
+  background: var(--accent-blue);
+  color: #fff;
+}
+
+.calendar-day.today {
+  box-shadow: 0 0 0 2px var(--accent-blue) inset;
+}
+
+.grid-row-4 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+}
+
+.circles-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.circle-item {
+  text-align: center;
+}
+
+.circle-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.pill {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pill-green { background: #dcfce7; color: #15803d; }
+.pill-blue { background: #dbeafe; color: #1e40af; }
+
+/* Scrollable table container */
+.table-container {
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 6px;
+}
+
+.table-container table {
+  width: 100%;
+}
+
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background: var(--card-bg);
+  z-index: 1;
+}
+
+@media (max-width: 850px) {
+  .grid-row-2, .grid-row-3, .grid-row-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.progress-ring {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.12);
+  transition: transform 0.2s ease;
+  padding: 6px;
+}
+
+.progress-ring:hover {
+  transform: scale(1.05);
+}
+
+.progress-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.progress-ring.circle-target {
+  background: var(--accent-light) !important;
+  border: 5px solid var(--accent-blue);
+  padding: 0;
+}
+
+.progress-ring-inner.circle-target-inner {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-align: center;
+  padding: 8px;
+  font-weight: 600;
+  background: transparent;
+}

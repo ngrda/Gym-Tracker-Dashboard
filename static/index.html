@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym Progress Dashboard</title>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="dashboard-window">
+    <div class="dashboard-body">
+
+      <!-- Top Summary Cards -->
+      <div class="top-cards">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-weight-scale"></i></div>
+          <div class="stat-info">
+            <h4>Current Weight</h4>
+            <div class="value" id="kpi-weight">- <span style="font-size: 0.8rem;">lbs</span></div>
+            <div class="subtext" id="kpi-weight-delta"></div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-dumbbell"></i></div>
+          <div class="stat-info">
+            <h4>Total Workouts</h4>
+            <div class="value" id="kpi-workouts">-</div>
+            <div class="subtext">This Month</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="stat-info">
+            <h4>Total Volume</h4>
+            <div class="value" id="kpi-volume">- <span style="font-size: 0.8rem;">lbs</span></div>
+            <div class="subtext">This Month</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-moon"></i></div>
+          <div class="stat-info">
+            <h4>Current Phase</h4>
+            <div class="value" id="kpi-phase" style="font-size: 1.05rem;">-</div>
+            <div class="subtext" id="kpi-phase-day"></div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="color: #f97316; background: #fff7ed;"><i class="fa-solid fa-trophy"></i></div>
+          <div class="stat-info">
+            <h4>Personal Records</h4>
+            <div class="value" id="kpi-prs-month">-</div>
+            <div class="subtext">This Month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progressive Overload Suggestions -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Progressive Overload Suggestions</span>
+        </div>
+        <div class="phase-banner" id="phaseBanner">
+          <span class="phase-name" id="phaseBannerName">-</span>
+          <span class="phase-item"><span>Target reps:</span><span id="phaseBannerReps">-</span></span>
+          <span class="phase-item"><span>Notes:</span><span id="phaseBannerNotes">-</span></span>
+        </div>
+        <div class="phase-tabs" id="phaseTabs"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>Category</th>
+              <th>Last Session</th>
+              <th>Weakest Set</th>
+              <th>Suggestion</th>
+            </tr>
+          </thead>
+          <tbody id="overloadTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Grid Row 2 -->
+      <div class="grid-row-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Body Weight Over Time</span>
+          </div>
+          <canvas id="weightChart" height="120"></canvas>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">PR Tracker (Personal Records)</span>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Exercise</th>
+                  <th>Category</th>
+                  <th>Best</th>
+                  <th>Date</th>
+                  <th>vs Last PR</th>
+                </tr>
+              </thead>
+              <tbody id="prTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Row 3 -->
+      <div class="grid-row-3">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Weekly Schedule</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Activity</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Workout Frequency</span>
+            <span class="calendar-month-label" id="calendarMonthLabel"></span>
+          </div>
+          <div class="calendar-grid" id="calendarMonth">
+            <div class="calendar-weekday-label">Mon</div>
+            <div class="calendar-weekday-label">Tue</div>
+            <div class="calendar-weekday-label">Wed</div>
+            <div class="calendar-weekday-label">Thu</div>
+            <div class="calendar-weekday-label">Fri</div>
+            <div class="calendar-weekday-label">Sat</div>
+            <div class="calendar-weekday-label">Sun</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Workout Volume Over Time</span>
+          </div>
+          <canvas id="volumeChart" height="120"></canvas>
+        </div>
+      </div>
+
+      <!-- Grid Row 4 -->
+      <div class="grid-row-4">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Progress Overview</span>
+          </div>
+          <div class="circles-container" id="progressCircles">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Progress Summary</span>
+          </div>
+          <table>
+            <tbody id="progressSummaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
