@@ -6,7 +6,7 @@ interactive web report: KPIs, cycle-phase-aware progressive overload
 suggestions, PR tracker, weekly schedule, training calendar, and
 weight/volume trends — no database required.
 
-**🔗 Live demo:** https://gym-progress-dashboard.onrender.com
+**🔗 Live demo:** [https://gym-progress-dashboard.onrender.com](https://gym-tracker-dashboard.onrender.com)
 
 This is a Tailwind-free, plain HTML + Chart.js template. The data is
 NOT hardcoded in a JSON file: a local server (Flask) reads your Excel
@@ -16,7 +16,7 @@ It's not Streamlit. It's a minimal server + your usual HTML.
 
 ## Run
 
-Just open the link: **https://gym-progress-dashboard.onrender.com**
+Just open the link: **https://gym-tracker-dashboard.onrender.com**
 
 Or run it locally:
 
