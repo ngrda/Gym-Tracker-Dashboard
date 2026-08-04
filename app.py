@@ -12,7 +12,12 @@ import re
 import openpyxl
 
 import pandas as pd
-from flask import Flask, jsonify, send_from_directory
+from flask import (
+    Flask, jsonify, send_from_directory, request, redirect,
+    url_for, session, render_template_string, abort,
+)
+import os
+import secrets
 
 # ------------------------------------------------------------------
 # Configuration & Application Setup
@@ -25,6 +30,15 @@ DEFAULT_CYCLE_LENGTH = 28
 KG_TO_LBS = 2.20462
 
 app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="")
+
+# Secret key for the login session cookie. Set FLASK_SECRET_KEY in Render's
+# Environment tab for a stable value; falls back to a random one (fine for
+# single-instance use, but sessions reset if the server restarts).
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", secrets.token_hex(16))
+
+# Password to access the /upload page. Set UPLOAD_PASSWORD in Render's
+# Environment tab. If it's not set, uploading is disabled for safety.
+UPLOAD_PASSWORD = os.environ.get("UPLOAD_PASSWORD", "")
 
 
 # ------------------------------------------------------------------
@@ -523,6 +537,84 @@ def build_gym_data() -> Dict[str, Any]:
         "weekly_schedule": weekly_schedule,
         "training_dates": training_dates_all,
     }
+
+
+# ------------------------------------------------------------------
+# Excel Upload (private, password-protected — file never goes in git)
+# ------------------------------------------------------------------
+
+UPLOAD_PAGE = """
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actualizar Gym Tracker</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:420px;
+    margin:70px auto;padding:0 22px;background:#14161F;color:#F5F5F2}
+  h1{font-size:19px;margin-bottom:4px}
+  p.sub{color:#9B9DB0;font-size:13.5px;margin-top:0}
+  input[type=password],input[type=file]{width:100%;padding:12px;margin:10px 0;
+    border-radius:10px;border:1px solid #2B2E42;background:#1D2030;color:#F5F5F2;
+    box-sizing:border-box;font-size:15px}
+  button{width:100%;padding:12px;border:none;border-radius:10px;background:#6C5CE7;
+    color:#fff;font-weight:700;font-size:15px;margin-top:4px}
+  .msg{margin-top:16px;padding:10px 12px;border-radius:8px;font-size:13.5px}
+  .ok{background:rgba(80,200,120,.15);color:#5FD787}
+  .err{background:rgba(229,72,77,.15);color:#E5484D}
+</style>
+</head>
+<body>
+  <h1>Actualizar Gym Tracker</h1>
+  {% if not logged_in %}
+    <p class="sub">Introduce la contraseña para subir un Excel nuevo.</p>
+    <form method="post" action="{{ url_for('upload_login') }}">
+      <input type="password" name="password" placeholder="Contraseña" required autofocus>
+      <button type="submit">Entrar</button>
+    </form>
+  {% else %}
+    <p class="sub">Selecciona el .xlsx actualizado. Sustituirá al actual al instante.</p>
+    <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+      <input type="file" name="excel_file" accept=".xlsx" required>
+      <button type="submit">Subir Excel</button>
+    </form>
+  {% endif %}
+  {% if message %}<div class="msg {{ 'ok' if ok else 'err' }}">{{ message }}</div>{% endif %}
+</body>
+</html>
+"""
+
+
+@app.route("/upload", methods=["GET"])
+def upload_page():
+    return render_template_string(
+        UPLOAD_PAGE,
+        logged_in=session.get("upload_ok", False),
+        message=request.args.get("msg"),
+        ok=request.args.get("ok") == "1",
+    )
+
+
+@app.route("/upload/login", methods=["POST"])
+def upload_login():
+    if not UPLOAD_PASSWORD:
+        return redirect(url_for("upload_page", msg="UPLOAD_PASSWORD no está configurada en el servidor.", ok="0"))
+    if request.form.get("password", "") == UPLOAD_PASSWORD:
+        session["upload_ok"] = True
+        return redirect(url_for("upload_page"))
+    return redirect(url_for("upload_page", msg="Contraseña incorrecta.", ok="0"))
+
+
+@app.route("/upload/file", methods=["POST"])
+def upload_file():
+    if not session.get("upload_ok"):
+        abort(403)
+    f = request.files.get("excel_file")
+    if not f or not f.filename.lower().endswith(".xlsx"):
+        return redirect(url_for("upload_page", msg="Sube un archivo .xlsx válido.", ok="0"))
+    f.save(GYM_FILE)
+    return redirect(url_for("upload_page", msg="Excel actualizado correctamente.", ok="1"))
 
 
 # ------------------------------------------------------------------
