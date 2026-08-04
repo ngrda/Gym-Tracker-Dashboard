@@ -1,0 +1,6 @@
+Gym_Tracker.xlsx
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
